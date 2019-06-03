@@ -3,15 +3,15 @@ import tensorflow as tf
 
 
 class Bop(tf.keras.optimizers.Optimizer):
-    def __init__(self, optimizer, threshold=1e-5, gamma=1e-2, name="Bop", **kwargs):
+    def __init__(self, fp_optimizer, threshold=1e-5, gamma=1e-2, name="Bop", **kwargs):
         super().__init__(name=name, **kwargs)
 
-        if not isinstance(optimizer, tf.keras.optimizers.Optimizer):
+        if not isinstance(fp_optimizer, tf.keras.optimizers.Optimizer):
             raise TypeError(
-                "optimizer is not an object of tf.keras.optimizers.Optimizer"
+                "fp_optimizer is not an object of tf.keras.optimizers.Optimizer"
             )
 
-        self._optimizer = optimizer
+        self._fp_optimizer = fp_optimizer
         self._set_hyper("threshold", threshold)
         self._set_hyper("gamma", gamma)
 
@@ -25,7 +25,7 @@ class Bop(tf.keras.optimizers.Optimizer):
         fp_grads_and_vars = [(g, v) for g, v in grads_and_vars if not self.is_binary(v)]
 
         bin_train_op = super().apply_gradients(bin_grads_and_vars, name=name)
-        fp_train_op = self._optimizer.apply_gradients(fp_grads_and_vars, name=name)
+        fp_train_op = self._fp_optimizer.apply_gradients(fp_grads_and_vars, name=name)
 
         return tf.group(bin_train_op, fp_train_op, name="train_with_bop")
 
@@ -61,4 +61,4 @@ class Bop(tf.keras.optimizers.Optimizer):
             "threshold": self._serialize_hyperparameter("threshold"),
             "gamma": self._serialize_hyperparameter("gamma"),
         }
-        return {**super().get_config(), **self._optimizer.get_config(), **config}
+        return {**super().get_config(), **self._fp_optimizer.get_config(), **config}

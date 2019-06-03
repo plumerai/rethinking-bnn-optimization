@@ -24,8 +24,28 @@ pip install -e .
 
 ## Train
 
-To train your model locally, you can use the cli:
+To train a model locally, you can use the cli:
 
 ```
 bnno train binarynet --dataset cifar10
 ```
+
+## Reproduce Paper Experiments
+
+### Hyperparameter Analysis (section 5.1)
+
+To reproduce the runs exploring various hyperparameters, run:
+```
+bnno train binarynet \
+    --dataset cifar10 \
+    --preprocess-fn resize_and_flip \
+    --hparams-set bop \
+    --hparams threshold=1e-6,gamma=1e-3
+```
+where you use the appropriate values for threshold and gamma.
+
+
+### CIFAR-10 (section 5.2)
+
+### ImageNet (section 5.3)
+

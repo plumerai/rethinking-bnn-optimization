@@ -11,7 +11,7 @@ setup(
     version="0.1.0",
     author="Plumerai",
     author_email="koen@plumerai.com",
-    description="Implementation for paper "Latent Weights Do Not Exist: Rethinking Binary Neural Network Optimization"",
+    description='Implementation for paper "Latent Weights Do Not Exist: Rethinking Binary Neural Network Optimization"',
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/plumerai/rethinking-bnn-optimization.git",
