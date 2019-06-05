@@ -47,7 +47,7 @@ where you use the appropriate values for threshold and gamma.
 
 ### CIFAR-10 (section 5.2)
 
-To acheive the accuracy in the paper of 91.3%, run:
+To achieve the accuracy in the paper of 91.3%, run:
 
 ```
 bnno train binarynet \
@@ -58,3 +58,9 @@ bnno train binarynet \
 ```
 
 ### ImageNet (section 5.3)
+
+To achieve the accuracy in the paper of 54.2%, run:
+
+```
+bnno train birealnet --dataset imagenet2012 --hparams-set bop --epochs 100
+```

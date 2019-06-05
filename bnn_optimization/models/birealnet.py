@@ -1,6 +1,7 @@
 from zookeeper import registry, HParams
 import larq as lq
 import tensorflow as tf
+from bnn_optimization import optimizers
 
 
 @registry.register_model
@@ -70,24 +71,21 @@ def birealnet(args, dataset):
 
 
 @registry.register_hparams(birealnet)
-class default(HParams):
+class bop(HParams):
     filters = 64
-    learning_rate = 5e-3
-    decay_schedule = "linear"
-    batch_size = 512
+    batch_size = 256
     input_quantizer = "approx_sign"
-    kernel_quantizer = "magnitude_aware_sign"
-    kernel_constraint = "weight_clip"
+    kernel_quantizer = None
+    kernel_constraint = None
     kernel_initializer = "glorot_normal"
 
     @property
     def optimizer(self):
-        if self.decay_schedule == "linear_cosine":
-            lr = tf.keras.experimental.LinearCosineDecay(self.learning_rate, 750684)
-        elif self.decay_schedule == "linear":
-            lr = tf.keras.optimizers.schedules.PolynomialDecay(
-                self.learning_rate, 750684, end_learning_rate=0, power=1.0
-            )
-        else:
-            lr = self.learning_rate
-        return tf.keras.optimizers.Adam(lr)
+        decay_step = 100 * 1281167 // self.batch_size
+        lr = tf.keras.optimizers.schedules.PolynomialDecay(
+            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
+        gamma = tf.keras.optimizers.schedules.PolynomialDecay(
+            5e-4, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
+        return optimizers.Bop(tf.keras.optimizers.Adam(lr), threshold=1e-7, gamma=gamma)
