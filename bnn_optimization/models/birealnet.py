@@ -71,13 +71,27 @@ def birealnet(args, dataset):
 
 
 @registry.register_hparams(birealnet)
-class bop(HParams):
+class default(HParams):
     filters = 64
     batch_size = 256
     input_quantizer = "approx_sign"
+    kernel_quantizer = "magnitude_aware_sign"
+    kernel_constraint = "weight_clip"
+    kernel_initializer = "glorot_normal"
+
+    @property
+    def optimizer(self):
+        decay_step = 100 * 1281167 // self.batch_size
+        lr = tf.keras.optimizers.schedules.PolynomialDecay(
+            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
+        return tf.keras.optimizers.Adam(lr)
+
+
+@registry.register_hparams(birealnet)
+class bop(default):
     kernel_quantizer = None
     kernel_constraint = None
-    kernel_initializer = "glorot_normal"
 
     @property
     def optimizer(self):
