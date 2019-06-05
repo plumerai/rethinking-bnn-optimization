@@ -9,7 +9,7 @@ Implementation for paper "Latent Weights Do Not Exist: Rethinking Binary Neural 
 - [Python](https://python.org) version `3.6` or `3.7`
 - [Tensorflow](https://www.tensorflow.org/install) version `1.14+` or `2.0.0`
 - [Larq](https://github.com/plumerai/larq) version `0.2.0`
-- [Zookeeper](https://github.com/plumerai/zookeeper) version `0.1.0`
+- [Zookeeper](https://github.com/plumerai/zookeeper) version `0.1.1`
 
 You can also check out one of our prebuilt [docker images](https://hub.docker.com/r/plumerai/deep-learning/tags).
 
