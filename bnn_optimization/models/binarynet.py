@@ -1,7 +1,6 @@
 from zookeeper import registry, HParams
 import larq as lq
 import tensorflow as tf
-from bnn_optimization import utils
 from bnn_optimization import optimizers
 
 

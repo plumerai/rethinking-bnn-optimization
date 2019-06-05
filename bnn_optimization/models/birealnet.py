@@ -1,11 +1,10 @@
 from zookeeper import registry, HParams
 import larq as lq
 import tensorflow as tf
-from bnn_optimization import utils
 
 
 @registry.register_model
-def birealnet(args, dataset, input_tensor=None, include_top=True):
+def birealnet(args, dataset):
     def residual_block(x, double_filters=False, filters=None):
         assert not (double_filters and filters)
 
@@ -64,9 +63,8 @@ def birealnet(args, dataset, input_tensor=None, include_top=True):
             out = residual_block(out)
 
     # layer 18
-    if include_top:
-        out = tf.keras.layers.GlobalAvgPool2D()(out)
-        out = tf.keras.layers.Dense(dataset.num_classes, activation="softmax")(out)
+    out = tf.keras.layers.GlobalAvgPool2D()(out)
+    out = tf.keras.layers.Dense(dataset.num_classes, activation="softmax")(out)
 
     return tf.keras.Model(inputs=img_input, outputs=out)
 
