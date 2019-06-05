@@ -19,15 +19,13 @@ setup(
     license="Apache 2.0",
     install_requires=[
         "click>=7.0",
-        "matplotlib>=3.0.3",
         "tensorflow-datasets>=1.0.2",
         "larq>=0.2.0",
         "zookeeper>=0.1.0",
     ],
     extras_require={
-        "tensorflow": ["tensorflow>=1.13.1"],
-        "tensorflow_gpu": ["tensorflow-gpu>=1.13.1"],
-        "test": ["pytest>=4.3.1", "pytest-cov>=2.6.1"],
+        "tensorflow": ["tensorflow>=1.14.0rc0"],
+        "tensorflow_gpu": ["tensorflow-gpu>=1.14.0rc0"],
     },
     entry_points="""
         [console_scripts]

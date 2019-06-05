@@ -89,3 +89,27 @@ class bop(HParams):
             threshold=self.threshold,
             gamma=self.gamma,
         )
+
+
+@registry.register_hparams(binarynet)
+class bop_sec52(HParams):
+    filters = 128
+    dense_units = 1024
+    kernel_size = 3
+    batch_size = 50
+    kernel_quantizer = tf.keras.layers.Activation("linear")
+    kernel_constraint = None
+    threshold = 1e-8
+    gamma = 1e-4
+    gamma_decay = 0.1
+    decay_step = int((50000 / 50) * 100)
+
+    @property
+    def optimizer(self):
+        return optimizers.Bop(
+            fp_optimizer=tf.keras.optimizers.Adam(0.01),
+            threshold=self.threshold,
+            gamma=tf.keras.optimizers.schedules.ExponentialDecay(
+                self.gamma, self.decay_step, self.gamma_decay, staircase=True
+            ),
+        )
