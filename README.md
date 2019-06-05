@@ -1,15 +1,15 @@
-# rethinking-bnn-optimization
+# Rethinking Binarized Neural Network Optimization
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-Implementation for paper "Latent Weights Do Not Exist: Rethinking Binary Neural Network Optimization"
+Implementation for paper "Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization"
 
 ## Requirements
 
 - [Python](https://python.org) version `3.6` or `3.7`
 - [Tensorflow](https://www.tensorflow.org/install) version `1.14+` or `2.0.0`
 - [Larq](https://github.com/plumerai/larq) version `0.2.0`
-- [Zookeeper](https://github.com/plumerai/zookeeper) version `0.1.0`
+- [Zookeeper](https://github.com/plumerai/zookeeper) version `0.1.1`
 
 You can also check out one of our prebuilt [docker images](https://hub.docker.com/r/plumerai/deep-learning/tags).
 
@@ -47,7 +47,7 @@ where you use the appropriate values for threshold and gamma.
 
 ### CIFAR-10 (section 5.2)
 
-To acheive the accuracy in the paper of 91.3%, run:
+To achieve the accuracy in the paper of 91.3%, run:
 
 ```
 bnno train binarynet \
@@ -58,3 +58,9 @@ bnno train binarynet \
 ```
 
 ### ImageNet (section 5.3)
+
+To achieve the accuracy in the paper of 54.2%, run:
+
+```
+bnno train birealnet --dataset imagenet2012 --hparams-set bop --epochs 100
+```

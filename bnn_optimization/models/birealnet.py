@@ -1,11 +1,11 @@
 from zookeeper import registry, HParams
 import larq as lq
 import tensorflow as tf
-from bnn_optimization import utils
+from bnn_optimization import optimizers
 
 
 @registry.register_model
-def birealnet(args, dataset, input_tensor=None, include_top=True):
+def birealnet(args, dataset):
     def residual_block(x, double_filters=False, filters=None):
         assert not (double_filters and filters)
 
@@ -64,9 +64,8 @@ def birealnet(args, dataset, input_tensor=None, include_top=True):
             out = residual_block(out)
 
     # layer 18
-    if include_top:
-        out = tf.keras.layers.GlobalAvgPool2D()(out)
-        out = tf.keras.layers.Dense(dataset.num_classes, activation="softmax")(out)
+    out = tf.keras.layers.GlobalAvgPool2D()(out)
+    out = tf.keras.layers.Dense(dataset.num_classes, activation="softmax")(out)
 
     return tf.keras.Model(inputs=img_input, outputs=out)
 
@@ -74,9 +73,7 @@ def birealnet(args, dataset, input_tensor=None, include_top=True):
 @registry.register_hparams(birealnet)
 class default(HParams):
     filters = 64
-    learning_rate = 5e-3
-    decay_schedule = "linear"
-    batch_size = 512
+    batch_size = 256
     input_quantizer = "approx_sign"
     kernel_quantizer = "magnitude_aware_sign"
     kernel_constraint = "weight_clip"
@@ -84,12 +81,25 @@ class default(HParams):
 
     @property
     def optimizer(self):
-        if self.decay_schedule == "linear_cosine":
-            lr = tf.keras.experimental.LinearCosineDecay(self.learning_rate, 750684)
-        elif self.decay_schedule == "linear":
-            lr = tf.keras.optimizers.schedules.PolynomialDecay(
-                self.learning_rate, 750684, end_learning_rate=0, power=1.0
-            )
-        else:
-            lr = self.learning_rate
+        decay_step = 100 * 1281167 // self.batch_size
+        lr = tf.keras.optimizers.schedules.PolynomialDecay(
+            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
         return tf.keras.optimizers.Adam(lr)
+
+
+@registry.register_hparams(birealnet)
+class bop(default):
+    kernel_quantizer = None
+    kernel_constraint = None
+
+    @property
+    def optimizer(self):
+        decay_step = 100 * 1281167 // self.batch_size
+        lr = tf.keras.optimizers.schedules.PolynomialDecay(
+            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
+        gamma = tf.keras.optimizers.schedules.PolynomialDecay(
+            5e-4, decay_step, end_learning_rate=2.5e-6, power=1.0
+        )
+        return optimizers.Bop(tf.keras.optimizers.Adam(lr), threshold=1e-7, gamma=gamma)
