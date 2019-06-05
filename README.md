@@ -1,8 +1,8 @@
-# rethinking-bnn-optimization
+# Rethinking Binarized Neural Network Optimization
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-Implementation for paper "Latent Weights Do Not Exist: Rethinking Binary Neural Network Optimization"
+Implementation for paper "Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization"
 
 ## Requirements
 
