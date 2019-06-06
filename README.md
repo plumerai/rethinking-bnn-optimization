@@ -1,8 +1,8 @@
 # Rethinking Binarized Neural Network Optimization
 
-[![License: Apache 2.0](https://img.shields.io/github/license/plumerai/rethinking-bnn-optimization.svg)](https://github.com/plumerai/rethinking-bnn-optimization/blob/master/LICENSE) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![arXiv:1906.02107](https://img.shields.io/badge/cs.LG-arXiv%3A1906.02107-b31b1b.svg)](https://arxiv.org/abs/1906.02107) [![License: Apache 2.0](https://img.shields.io/github/license/plumerai/rethinking-bnn-optimization.svg)](https://github.com/plumerai/rethinking-bnn-optimization/blob/master/LICENSE) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-Implementation for paper "Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization"
+Implementation for paper "[Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization](https://arxiv.org/abs/1906.02107)"
 
 ## Requirements
 
