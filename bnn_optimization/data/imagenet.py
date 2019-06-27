@@ -51,12 +51,11 @@ def _random_crop_and_flip(image, crop_height, crop_width):
 
     Returns:
       3-D tensor with cropped image.
-
     """
     height, width = _get_h_w(image)
 
     # Create a random bounding box.
-    #
+
     # Use tf.random.uniform and not numpy.random.rand as doing the former would
     # generate random numbers at graph eval time, unlike the latter which
     # generates random numbers at graph definition time.
@@ -119,14 +118,18 @@ def _mean_image_subtraction(image, means):
         raise ValueError("len(means) must match the number of channels")
 
     # We have a 1-D tensor of means; convert to 3-D.
-    means = tf.expand_dims(tf.expand_dims(means, 0), 0)
+    # We explicitly call `broadcast` instead of simply expanding dimensions
+    # for better performance: https://github.com/tensorflow/models/pull/6551
+    means = tf.broadcast_to(means, tf.shape(image))
 
     return image - means
 
 
 def _scale_normalization(image, stds):
     # We have a 1-D tensor of means; convert to 3-D.
-    stds = tf.expand_dims(tf.expand_dims(stds, 0), 0)
+    # We explicitly call `broadcast` instead of simply expanding dimensions
+    # for better performance: https://github.com/tensorflow/models/pull/6551
+    stds = tf.broadcast_to(stds, tf.shape(image))
 
     return image / stds
 
@@ -149,11 +152,11 @@ def _smallest_size_at_least(height, width, smallest_side):
     """
     smallest_side = tf.cast(smallest_side, tf.float32)
 
-    height = tf.cast(height, tf.float32)
-    width = tf.cast(width, tf.float32)
+    height, width = tf.cast(height, tf.float32), tf.cast(width, tf.float32)
 
     smaller_dim = tf.minimum(height, width)
     scale_ratio = smallest_side / smaller_dim
+
     new_height = tf.cast(height * scale_ratio, tf.int32)
     new_width = tf.cast(width * scale_ratio, tf.int32)
 
@@ -171,7 +174,6 @@ def _aspect_preserving_resize(image, smallest_side):
     Returns:
       resized_image: A 3-D tensor containing the resized image.
     """
-    smallest_side = tf.convert_to_tensor(smallest_side, dtype=tf.int32)
 
     height, width = _get_h_w(image)
     new_height, new_width = _smallest_size_at_least(height, width, smallest_side)
