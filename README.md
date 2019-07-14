@@ -4,6 +4,8 @@
 
 Implementation for paper "[Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization](https://arxiv.org/abs/1906.02107)"
 
+**Note**: [Bop is now added to Larq](https://larq.dev/api/optimizers/#bop), the open source training library for BNNs. We recommend using the Larq implementation of Bop: it is compatible with more versions of TensorFlow and will be more actively maintained.
+
 ## Requirements
 
 - [Python](https://python.org) version `3.6` or `3.7`
