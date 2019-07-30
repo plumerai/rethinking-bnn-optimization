@@ -71,10 +71,7 @@ class default(HParams):
 
 
 @registry.register_hparams(binarynet)
-class bop(HParams):
-    filters = 128
-    dense_units = 1024
-    kernel_size = 3
+class bop(default):
     batch_size = 100
     kernel_quantizer = tf.keras.layers.Activation("linear")
     kernel_constraint = None
@@ -91,10 +88,7 @@ class bop(HParams):
 
 
 @registry.register_hparams(binarynet)
-class bop_sec52(HParams):
-    filters = 128
-    dense_units = 1024
-    kernel_size = 3
+class bop_sec52(default):
     batch_size = 50
     kernel_quantizer = tf.keras.layers.Activation("linear")
     kernel_constraint = None
