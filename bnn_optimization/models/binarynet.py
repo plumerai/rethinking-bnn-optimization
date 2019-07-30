@@ -61,8 +61,8 @@ def binarynet(hparams, dataset):
 
 @registry.register_hparams(binarynet)
 class default(HParams):
-    filters = 64
-    dense_units = 4096
+    filters = 128
+    dense_units = 1024
     kernel_size = 3
     batch_size = 256
     optimizer = tf.keras.optimizers.Adam(5e-3)
