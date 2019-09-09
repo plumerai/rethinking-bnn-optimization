@@ -52,15 +52,17 @@ def birealnet(args, dataset):
     out = tf.keras.layers.BatchNormalization(momentum=0.8)(out)
     out = tf.keras.layers.MaxPool2D(3, strides=2, padding="same")(out)
 
-    # layer 2 - 5
+    # layer 2
     out = residual_block(out, filters=args.filters)
-    for _ in range(1, 5):
+
+    # layer 3 - 5
+    for _ in range(3):
         out = residual_block(out)
 
     # layer 6 - 17
-    for i in range(1, 4):
+    for _ in range(3):
         out = residual_block(out, double_filters=True)
-        for _ in range(1, 4):
+        for _ in range(3):
             out = residual_block(out)
 
     # layer 18
