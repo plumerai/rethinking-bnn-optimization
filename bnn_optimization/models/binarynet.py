@@ -5,7 +5,7 @@ from bnn_optimization import optimizers
 
 
 @registry.register_model
-def binarynet(hparams, dataset):
+def binarynet(hparams, input_shape, num_classes):
     kwhparams = dict(
         input_quantizer="ste_sign",
         kernel_quantizer=hparams.kernel_quantizer,
@@ -21,7 +21,7 @@ def binarynet(hparams, dataset):
                 kernel_quantizer=hparams.kernel_quantizer,
                 kernel_constraint=hparams.kernel_constraint,
                 use_bias=False,
-                input_shape=dataset.input_shape,
+                input_shape=input_shape,
             ),
             tf.keras.layers.BatchNormalization(scale=False),
             lq.layers.QuantConv2D(
@@ -52,7 +52,7 @@ def binarynet(hparams, dataset):
             tf.keras.layers.BatchNormalization(scale=False),
             lq.layers.QuantDense(hparams.dense_units, **kwhparams),
             tf.keras.layers.BatchNormalization(scale=False),
-            lq.layers.QuantDense(dataset.num_classes, **kwhparams),
+            lq.layers.QuantDense(num_classes, **kwhparams),
             tf.keras.layers.BatchNormalization(scale=False),
             tf.keras.layers.Activation("softmax"),
         ]
@@ -61,6 +61,7 @@ def binarynet(hparams, dataset):
 
 @registry.register_hparams(binarynet)
 class default(HParams):
+    epochs = 100
     filters = 128
     dense_units = 1024
     kernel_size = 3
@@ -73,7 +74,7 @@ class default(HParams):
 @registry.register_hparams(binarynet)
 class bop(default):
     batch_size = 100
-    kernel_quantizer = tf.keras.layers.Activation("linear")
+    kernel_quantizer = None
     kernel_constraint = None
     threshold = 1e-6
     gamma = 1e-3
@@ -89,8 +90,9 @@ class bop(default):
 
 @registry.register_hparams(binarynet)
 class bop_sec52(default):
+    epochs = 500
     batch_size = 50
-    kernel_quantizer = tf.keras.layers.Activation("linear")
+    kernel_quantizer = None
     kernel_constraint = None
     threshold = 1e-8
     gamma = 1e-4

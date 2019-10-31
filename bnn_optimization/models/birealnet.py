@@ -5,7 +5,7 @@ from bnn_optimization import optimizers
 
 
 @registry.register_model
-def birealnet(args, dataset):
+def birealnet(hparams, input_shape, num_classes):
     def residual_block(x, double_filters=False, filters=None):
         assert not (double_filters and filters)
 
@@ -17,10 +17,7 @@ def birealnet(args, dataset):
         if in_filters != out_filters:
             shortcut = tf.keras.layers.AvgPool2D(2, strides=2, padding="same")(shortcut)
             shortcut = tf.keras.layers.Conv2D(
-                out_filters,
-                1,
-                kernel_initializer=args.kernel_initializer,
-                use_bias=False,
+                out_filters, 1, kernel_initializer="glorot_normal", use_bias=False,
             )(shortcut)
             shortcut = tf.keras.layers.BatchNormalization(momentum=0.8)(shortcut)
 
@@ -29,23 +26,23 @@ def birealnet(args, dataset):
             3,
             strides=1 if out_filters == in_filters else 2,
             padding="same",
-            input_quantizer=args.input_quantizer,
-            kernel_quantizer=args.kernel_quantizer,
-            kernel_initializer=args.kernel_initializer,
-            kernel_constraint=args.kernel_constraint,
+            input_quantizer="approx_sign",
+            kernel_quantizer=None,
+            kernel_initializer="glorot_normal",
+            kernel_constraint=None,
             use_bias=False,
         )(x)
         x = tf.keras.layers.BatchNormalization(momentum=0.8)(x)
         return tf.keras.layers.add([x, shortcut])
 
-    img_input = tf.keras.layers.Input(shape=dataset.input_shape)
+    img_input = tf.keras.layers.Input(shape=input_shape)
 
     # layer 1
     out = tf.keras.layers.Conv2D(
-        args.filters,
+        64,
         7,
         strides=2,
-        kernel_initializer=args.kernel_initializer,
+        kernel_initializer="glorot_normal",
         padding="same",
         use_bias=False,
     )(img_input)
@@ -53,7 +50,7 @@ def birealnet(args, dataset):
     out = tf.keras.layers.MaxPool2D(3, strides=2, padding="same")(out)
 
     # layer 2
-    out = residual_block(out, filters=args.filters)
+    out = residual_block(out, filters=64)
 
     # layer 3 - 5
     for _ in range(3):
@@ -67,41 +64,33 @@ def birealnet(args, dataset):
 
     # layer 18
     out = tf.keras.layers.GlobalAvgPool2D()(out)
-    out = tf.keras.layers.Dense(dataset.num_classes, activation="softmax")(out)
+    out = tf.keras.layers.Dense(num_classes, activation="softmax")(out)
 
     return tf.keras.Model(inputs=img_input, outputs=out)
 
 
 @registry.register_hparams(birealnet)
-class default(HParams):
-    filters = 64
-    batch_size = 256
-    input_quantizer = "approx_sign"
-    kernel_quantizer = "magnitude_aware_sign"
-    kernel_constraint = "weight_clip"
-    kernel_initializer = "glorot_normal"
+class bop(HParams):
+    epochs = 300
+    batch_size = 1024
+
+    threshold = 1e-8
+
+    gamma_start = 1e-4
+    gamma_end = 1e-6
+
+    lr_start = 2.5e-3
+    lr_end = 5e-6
 
     @property
     def optimizer(self):
-        decay_step = 100 * 1281167 // self.batch_size
+        decay_step = self.epochs * 1281167 // self.batch_size
         lr = tf.keras.optimizers.schedules.PolynomialDecay(
-            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
-        )
-        return tf.keras.optimizers.Adam(lr)
-
-
-@registry.register_hparams(birealnet)
-class bop(default):
-    kernel_quantizer = None
-    kernel_constraint = None
-
-    @property
-    def optimizer(self):
-        decay_step = 100 * 1281167 // self.batch_size
-        lr = tf.keras.optimizers.schedules.PolynomialDecay(
-            2.5e-3, decay_step, end_learning_rate=2.5e-6, power=1.0
+            self.lr_start, decay_step, end_learning_rate=self.lr_end, power=1.0
         )
         gamma = tf.keras.optimizers.schedules.PolynomialDecay(
-            5e-4, decay_step, end_learning_rate=2.5e-6, power=1.0
+            self.gamma_start, decay_step, end_learning_rate=self.gamma_end, power=1.0
         )
-        return optimizers.Bop(tf.keras.optimizers.Adam(lr), threshold=1e-7, gamma=gamma)
+        return optimizers.Bop(
+            tf.keras.optimizers.Adam(lr), threshold=self.threshold, gamma=gamma
+        )

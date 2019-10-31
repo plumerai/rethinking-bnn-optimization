@@ -3,6 +3,7 @@ import sys
 import tensorflow as tf
 import contextlib
 import json
+import importlib
 from tensorflow.python.eager.context import num_gpus
 
 
@@ -35,3 +36,16 @@ def get_distribution_scope(batch_size):
             distribution_scope = contextlib.suppress
 
     return distribution_scope()
+
+
+def import_all_sub_modules(module):
+    with os.scandir(os.path.join(os.path.dirname(__file__), module)) as it:
+        for entry in it:
+            name = entry.name
+            if name.endswith(".py") and not name.startswith("_") and entry.is_file():
+                importlib.import_module(f"bnn_optimization.{module}.{name[:-3]}")
+
+
+def prepare_registry():
+    for module in ("data", "models"):
+        import_all_sub_modules(module)

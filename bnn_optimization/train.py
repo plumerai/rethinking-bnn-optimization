@@ -1,12 +1,13 @@
 from zookeeper import cli, build_train
 from os import path
 import click
+from bnn_optimization import utils
 
 
 @cli.command()
 @click.option("--tensorboard/--no-tensorboard", default=True)
-@build_train
-def train(build_model, dataset, hparams, output_dir, epochs, tensorboard):
+@build_train(utils.prepare_registry)
+def train(build_model, dataset, hparams, output_dir, tensorboard):
     import larq as lq
     from bnn_optimization import utils, data
     import tensorflow as tf
@@ -21,7 +22,6 @@ def train(build_model, dataset, hparams, output_dir, epochs, tensorboard):
     if tensorboard:
         callbacks.extend(
             [
-                lq.callbacks.QuantizationLogger(update_freq=250),
                 tf.keras.callbacks.TensorBoard(
                     log_dir=output_dir,
                     write_graph=False,
@@ -36,7 +36,7 @@ def train(build_model, dataset, hparams, output_dir, epochs, tensorboard):
         validation_data = dataset.validation_data(hparams.batch_size)
 
     with utils.get_distribution_scope(hparams.batch_size):
-        model = build_model(hparams, dataset)
+        model = build_model(hparams, **dataset.preprocessing.kwargs)
         model.compile(
             optimizer=hparams.optimizer,
             loss="categorical_crossentropy",
@@ -50,7 +50,7 @@ def train(build_model, dataset, hparams, output_dir, epochs, tensorboard):
 
     model.fit(
         train_data,
-        epochs=epochs,
+        epochs=hparams.epochs,
         steps_per_epoch=dataset.train_examples // hparams.batch_size,
         validation_data=validation_data,
         validation_steps=dataset.validation_examples // hparams.batch_size,

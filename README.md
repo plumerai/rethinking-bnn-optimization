@@ -56,13 +56,22 @@ bnno train binarynet \
     --dataset cifar10 \
     --preprocess-fn resize_and_flip \
     --hparams-set bop_sec52 \
-    --epochs 500
 ```
 
 ### ImageNet (section 5.3)
 
-To achieve the accuracy in the paper of 54.2%, run:
+To reproduce the reported results on ImageNet, run:
 
 ```
-bnno train birealnet --dataset imagenet2012 --hparams-set bop --epochs 100
+bnno train alexnet --dataset imagenet2012 --hparams-set bop
+bnno train xnornet --dataset imagenet2012 --hparams-set bop
+bnno train birealnet --dataset imagenet2012 --hparams-set bop
 ```
+
+This should give the following results:
+
+| Network | Bop - top-1 accuracy |
+|----|----|
+|Binary Alexnet | 41.1% |
+|XNOR-Net | 45.9% |
+|Bi-Real Net | 56.6% |
