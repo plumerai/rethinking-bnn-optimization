@@ -68,10 +68,12 @@ bnno train xnornet --dataset imagenet2012 --hparams-set bop
 bnno train birealnet --dataset imagenet2012 --hparams-set bop
 ```
 
-This should give the following results:
+This should give the results listed below. Click on the tensorboard icons to see training and validation accuracy curves of the reported runs.
 
 | Network | Bop - top-1 accuracy |
 |----|----|
-|Binary Alexnet | 41.1% |
-|XNOR-Net | 45.9% |
-|Bi-Real Net | 56.6% |
+|Binary Alexnet |41.1% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/T394L4j8QteQv4aDuJ34LA)|
+|XNOR-Net | 45.9% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/Vm4o0LQDTYOXu4ARsYbgXQ)|
+|Bi-Real Net | 56.6% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/5YIO7lG7RgyYUjnPil9tNQ)|
+
+
