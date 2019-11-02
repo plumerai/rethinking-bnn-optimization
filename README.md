@@ -70,10 +70,48 @@ bnno train birealnet --dataset imagenet2012 --hparams-set bop
 
 This should give the results listed below. Click on the tensorboard icons to see training and validation accuracy curves of the reported runs.
 
-| Network | Bop - top-1 accuracy |
-|----|----|
-|Binary Alexnet |41.1% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/T394L4j8QteQv4aDuJ34LA)|
-|XNOR-Net | 45.9% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/Vm4o0LQDTYOXu4ARsYbgXQ)|
-|Bi-Real Net | 56.6% &nbsp;&nbsp;&nbsp; [![tensorboard](https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png)](https://tensorboard.dev/experiment/5YIO7lG7RgyYUjnPil9tNQ)|
-
-
+<table>
+  <tr>
+    <th>Network</th>
+    <th colspan="2">Bop - top-1 accuracy</th>
+  </tr>
+  <tr>
+    <td>Binary Alexnet</td>
+    <td>41.1%</td>
+    <td>
+      <a
+        href="https://tensorboard.dev/experiment/T394L4j8QteQv4aDuJ34LA"
+        rel="nofollow"
+        ><img
+          src="https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png"
+          alt="tensorboard"
+      /></a>
+    </td>
+  </tr>
+  <tr>
+    <td>XNOR-Net</td>
+    <td>45.9%</td>
+    <td>
+      <a
+        href="https://tensorboard.dev/experiment/Vm4o0LQDTYOXu4ARsYbgXQ"
+        rel="nofollow"
+        ><img
+          src="https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png"
+          alt="tensorboard"
+      /></a>
+    </td>
+  </tr>
+  <tr>
+    <td>Bi-Real Net</td>
+    <td>56.6%</td>
+    <td>
+      <a
+        href="https://tensorboard.dev/experiment/5YIO7lG7RgyYUjnPil9tNQ"
+        rel="nofollow"
+        ><img
+          src="https://user-images.githubusercontent.com/29484762/68027986-af2bc800-fcab-11e9-94a3-78d8aae7688b.png"
+          alt="tensorboard"
+      /></a>
+    </td>
+  </tr>
+</table>
