@@ -2,7 +2,9 @@
 
 [![arXiv:1906.02107](https://img.shields.io/badge/cs.LG-arXiv%3A1906.02107-b31b1b.svg)](https://arxiv.org/abs/1906.02107) [![License: Apache 2.0](https://img.shields.io/github/license/plumerai/rethinking-bnn-optimization.svg)](https://github.com/plumerai/rethinking-bnn-optimization/blob/master/LICENSE) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-Implementation for paper "[Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization](https://arxiv.org/abs/1906.02107)"
+Implementation for paper "[Latent Weights Do Not Exist: Rethinking Binarized Neural Network Optimization](https://arxiv.org/abs/1906.02107)".
+
+A poster illustrating the proposed algorithm and its relation to the previous BNN optimization strategy is included at [./poster.pdf](poster.pdf).
 
 **Note**: [Bop is now added to Larq](https://larq.dev/api/optimizers/#bop), the open source training library for BNNs. We recommend using the Larq implementation of Bop: it is compatible with more versions of TensorFlow and will be more actively maintained.
 
